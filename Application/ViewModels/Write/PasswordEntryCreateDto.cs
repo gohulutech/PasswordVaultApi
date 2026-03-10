@@ -1,10 +1,22 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.Write;
 
 public class PasswordEntryCreateDto
 {
-    public string Name { get; set; }
-    public string Username { get; set; }
-    public string Password { get; set; }
+    [Required]
+    public required string Name { get; set; }
+
+    [Required]
+    public required string Username { get; set; }
+
+    [Required]
+    public required string EncryptedPassword { get; set; }
+
+    [Required]
+    public required string Salt { get; set; }
+
+    [Required]
+    public required string IV { get; set; }
 }

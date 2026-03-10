@@ -10,4 +10,6 @@ internal class PasswordEntryEntity
     public string Name { get; set; }
     public string Username { get; set; }
     public string EncryptedPassword { get; set; }
+    public string Salt { get; set; }
+    public string IV { get; set; }
 }

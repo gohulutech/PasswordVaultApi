@@ -11,5 +11,7 @@ Content-Type: application/json
 {
     "name": "My Email",
     "username": "hugo@example.com",
-    "password": "MySecretPassword123"
+    "encryptedPassword": "MySecretPassword123",
+    "salt": "123456768900",
+    "iv": "2839892832"
 }

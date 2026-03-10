@@ -18,9 +18,16 @@ public class PasswordEntryService(IPasswordEntryRepository passwordEntryReposito
         var passwordEntry = PasswordEntry.CreatePasswordEntry(0,
             passwordEntryCreateDto.Name,
             passwordEntryCreateDto.Username,
-            Password.Create(passwordEntryCreateDto.Password));
+            passwordEntryCreateDto.EncryptedPassword,
+            passwordEntryCreateDto.Salt,
+            passwordEntryCreateDto.IV);
 
         var createdPasswordEntry = await passwordEntryRepository.SavePasswordEntry(passwordEntry);
-        return new PasswordEntryDetailDto(createdPasswordEntry.Id, createdPasswordEntry.Name, createdPasswordEntry.Username, createdPasswordEntry.Password.Value);
+        return new PasswordEntryDetailDto(createdPasswordEntry.Id,
+            createdPasswordEntry.Name,
+            createdPasswordEntry.Username,
+            createdPasswordEntry.EncryptedPassword,
+            createdPasswordEntry.Salt,
+            createdPasswordEntry.IV);
     }
 }
