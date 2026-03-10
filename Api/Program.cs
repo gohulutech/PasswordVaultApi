@@ -1,3 +1,4 @@
+using Application;
 using Domain.Interfaces;
 using Infrastructure;
 using SQLite;
@@ -14,14 +15,15 @@ builder.Services.AddSingleton<SQLiteAsyncConnection>(sp =>
 });
 
 builder.Services.AddSingleton<IPasswordEntryRepository, PasswordEntryRepository>();
+builder.Services.AddScoped<IPasswordEntryService, PasswordEntryService>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.MapPost("/")
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -29,5 +31,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapControllers();
 
 app.Run();
