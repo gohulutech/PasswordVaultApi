@@ -28,7 +28,7 @@ public class PasswordEntryRepository(SQLiteAsyncConnection db) : IPasswordEntryR
             {
                 Name = passwordEntry.Name,
                 Username = passwordEntry.Username,
-                EncryptedPassword = CryptoHelper.Encrypt(passwordEntry.Password)
+                EncryptedPassword = CryptoHelper.Encrypt(passwordEntry.Password.Value)
             };
             await db.InsertAsync(entity);
             return MapFromEntity(entity);
@@ -36,13 +36,16 @@ public class PasswordEntryRepository(SQLiteAsyncConnection db) : IPasswordEntryR
 
         entity.Name = passwordEntry.Name;
         entity.Username = passwordEntry.Username;
-        entity.EncryptedPassword = CryptoHelper.Encrypt(passwordEntry.Password);
+        entity.EncryptedPassword = CryptoHelper.Encrypt(passwordEntry.Password.Value);
         await db.UpdateAsync(entity);
         return MapFromEntity(entity);
     }
 
     private PasswordEntry MapFromEntity(PasswordEntryEntity entity)
     {
-        return PasswordEntry.CreatePasswordEntry(entity.Id, entity.Name, entity.Username, CryptoHelper.Decrypt(entity.EncryptedPassword));
+        return PasswordEntry.CreatePasswordEntry(entity.Id,
+            entity.Name,
+            entity.Username,
+            Password.Create(CryptoHelper.Decrypt(entity.EncryptedPassword)));
     }
 }
