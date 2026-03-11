@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import type { PasswordEntryPreview } from "../models/PasswordEntryPreview";
 import { getPasswordEntries } from "../services/password-entry-service";
 
-export default function SidePanel() {
+interface ISidePanelProps {
+  onPasswordEntryClick: (id: number) => void;
+}
+
+export default function SidePanel({ onPasswordEntryClick }: ISidePanelProps) {
   const [passwordEntries, setPasswordEntries] = useState<
     PasswordEntryPreview[]
   >([]);
-
-  console.log("passwordentries", passwordEntries);
 
   useEffect(() => {
     getPasswordEntries()
@@ -20,7 +22,11 @@ export default function SidePanel() {
   return (
     <div>
       {passwordEntries.map((passwordEntry) => (
-        <div>{passwordEntry.name}</div>
+        <div key={passwordEntry.id}>
+          <button onClick={() => onPasswordEntryClick(passwordEntry.id)}>
+            {passwordEntry.name}
+          </button>
+        </div>
       ))}
     </div>
   );

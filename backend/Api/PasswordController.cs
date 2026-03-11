@@ -18,7 +18,9 @@ namespace Api
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPasswordEntry(int id)
         {
-            throw new NotImplementedException();
+            var passwordEntry = await passwordEntryService.GetPasswordEntry(id);
+            if (passwordEntry == null) return NotFound();
+            return Ok(passwordEntry);
         }
 
         [HttpPost("Create")]

@@ -13,6 +13,18 @@ public class PasswordEntryService(IPasswordEntryRepository passwordEntryReposito
         return passwordEntries.Select(passwordEntry => new PasswordEntryPreviewDto(passwordEntry.Id, passwordEntry.Name, passwordEntry.Username)).ToList();
     }
 
+    public async Task<PasswordEntryDetailDto?> GetPasswordEntry(int id)
+    {
+        var passwordEntry = await passwordEntryRepository.GetPasswordEntry(id);
+        if (passwordEntry == null) return null;
+        return new PasswordEntryDetailDto(passwordEntry.Id,
+            passwordEntry.Name,
+            passwordEntry.Username,
+            passwordEntry.EncryptedPassword,
+            passwordEntry.Salt,
+            passwordEntry.IV);
+    }
+
     public async Task<PasswordEntryDetailDto> Create(PasswordEntryCreateDto passwordEntryCreateDto)
     {
         var passwordEntry = PasswordEntry.CreatePasswordEntry(0,
@@ -30,4 +42,5 @@ public class PasswordEntryService(IPasswordEntryRepository passwordEntryReposito
             createdPasswordEntry.Salt,
             createdPasswordEntry.IV);
     }
+
 }

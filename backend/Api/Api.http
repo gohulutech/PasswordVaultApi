@@ -4,6 +4,10 @@
 GET {{Api_HostAddress}}/api/password
 Accept: application/json
 
+### Get specific password entry (detail)
+GET {{Api_HostAddress}}/api/password/1
+Accept: application/json
+
 ### Create a new password entry
 POST {{Api_HostAddress}}/api/password/Create
 Content-Type: application/json

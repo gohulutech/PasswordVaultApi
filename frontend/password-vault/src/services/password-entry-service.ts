@@ -1,3 +1,4 @@
+import type { PasswordEntryDetail } from "../models/PasswordEntryDetail";
 import type { PasswordEntryPreview } from "../models/PasswordEntryPreview";
 
 export const getPasswordEntries = async () => {
@@ -9,6 +10,25 @@ export const getPasswordEntries = async () => {
     }
 
     const result = (await response.json()) as PasswordEntryPreview[];
+    return result;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error("Unknown error", error);
+    }
+  }
+};
+
+export const getPasswordEntry = async (id: number) => {
+  const url = `http://localhost:5174/api/password/${id}`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    const result = (await response.json()) as PasswordEntryDetail;
     return result;
   } catch (error: unknown) {
     if (error instanceof Error) {
