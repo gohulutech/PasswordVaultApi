@@ -5,6 +5,15 @@ using SQLite;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors((options) =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        });
+});
+
 string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "db.db3");
 
 builder.Services.AddSingleton<SQLiteAsyncConnection>(sp =>
@@ -23,6 +32,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
