@@ -3,6 +3,9 @@ import NameTextField from "./NameTextField";
 import UserameTextField from "./UsernameTextField";
 import { Button, Stack } from "@mui/material";
 import PasswordTextField from "./PasswordTextField";
+import { createPasswordEntry } from "../../services/password-entry-service";
+import type { PasswordEntryCreate } from "../../models/PasswordEntryCreate";
+import type { PasswordEntryDetail } from "../../models/PasswordEntryDetail";
 
 interface IFormInput {
   name: string;
@@ -11,7 +14,9 @@ interface IFormInput {
 }
 
 interface IPasswordEntryCreateFormProps {
-  onPasswordEntryCreated: () => void;
+  onPasswordEntryCreated: (
+    newPasswordEntry: PasswordEntryDetail,
+  ) => Promise<void>;
 }
 
 export function PasswordEntryCreateForm({
@@ -25,9 +30,15 @@ export function PasswordEntryCreateForm({
     },
   });
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
-    onPasswordEntryCreated();
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    const newPasswordEntry: PasswordEntryCreate = {
+      name: data.name,
+      username: data.username,
+      password: data.password,
+    };
+    const passwordEntryDetail = await createPasswordEntry(newPasswordEntry);
+    if (!passwordEntryDetail) return;
+    await onPasswordEntryCreated(passwordEntryDetail);
   };
 
   return (

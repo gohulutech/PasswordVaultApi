@@ -13,24 +13,14 @@ import {
 interface ISidePanelProps {
   onPasswordEntryClick: (id: number) => void;
   onCreatePasswordEntry: () => void;
+  passwordEntries: PasswordEntryPreview[];
 }
 
 export default function SidePanel({
   onPasswordEntryClick,
   onCreatePasswordEntry,
+  passwordEntries,
 }: ISidePanelProps) {
-  const [passwordEntries, setPasswordEntries] = useState<
-    PasswordEntryPreview[]
-  >([]);
-
-  useEffect(() => {
-    getPasswordEntries()
-      .then((passwordEntries) => {
-        if (passwordEntries) setPasswordEntries(passwordEntries);
-      })
-      .catch(() => console.error("Could not load password entries"));
-  }, []);
-
   const handleSelectPasswordEntry = (passwordEntry: PasswordEntryPreview) =>
     onPasswordEntryClick(passwordEntry.id);
 

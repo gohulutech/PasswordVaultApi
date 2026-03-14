@@ -1,17 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Detail from "./components/Detail";
 import SidePanel from "./components/SidePanel";
 import type { PasswordEntryDetail } from "./models/PasswordEntryDetail";
-import { getPasswordEntry } from "./services/password-entry-service";
+import {
+  getPasswordEntries,
+  getPasswordEntry,
+} from "./services/password-entry-service";
 import { Box } from "@mui/material";
 import { PasswordEntryCreateForm } from "./components/PasswordEntryCreateForm/PasswordEntryCreateForm";
+import type { PasswordEntryPreview } from "./models/PasswordEntryPreview";
 
 function App() {
   const [selectedPasswordEntry, setSelectedPasswordEntry] = useState<
     PasswordEntryDetail | undefined
   >(undefined);
   const [isCreate, setIsCreate] = useState<boolean>(false);
+  const [passwordEntries, setPasswordEntries] = useState<
+    PasswordEntryPreview[]
+  >([]);
+
+  useEffect(() => {
+    getPasswordEntries()
+      .then((passwordEntries) => {
+        if (passwordEntries) setPasswordEntries(passwordEntries);
+      })
+      .catch(() => console.error("Could not load password entries"));
+  }, []);
 
   const handlePasswordEntryClick = async (id: number) => {
     if (!id) return;
@@ -21,8 +36,13 @@ function App() {
     setSelectedPasswordEntry(passwordEntry);
   };
 
-  const handlePasswordEntryCreated = () => {
+  const handlePasswordEntryCreated = async (
+    newPasswordEntry: PasswordEntryDetail,
+  ) => {
     setIsCreate(false);
+    const passwordEntries = await getPasswordEntries();
+    if (passwordEntries) setPasswordEntries(passwordEntries);
+    setSelectedPasswordEntry(newPasswordEntry);
   };
 
   return (
@@ -30,6 +50,7 @@ function App() {
       <SidePanel
         onPasswordEntryClick={handlePasswordEntryClick}
         onCreatePasswordEntry={() => setIsCreate(true)}
+        passwordEntries={passwordEntries}
       />
       <Box sx={{ flexGrow: 1 }}>
         {selectedPasswordEntry && !isCreate && (

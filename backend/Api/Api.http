@@ -9,11 +9,11 @@ GET {{Api_HostAddress}}/api/password/3
 Accept: application/json
 
 ### Create a new password entry
-POST {{Api_HostAddress}}/api/password/Create
+POST {{Api_HostAddress}}/api/password
 Content-Type: application/json
 
 {
     "name": "test url",
     "username": "hugo@example.com",
-    "password": "MySecretPassword123"
+    "password": "MySecretPassword1234"
 }

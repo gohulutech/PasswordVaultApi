@@ -23,7 +23,7 @@ namespace Api
             return Ok(passwordEntry);
         }
 
-        [HttpPost("Create")]
+        [HttpPost]
         public async Task<ActionResult<PasswordEntryDetailDto>> CreatePasswordEntry([FromBody] PasswordEntryCreateDto passwordEntryCreateDto)
         {
             var createdEntry = await passwordEntryService.Create(passwordEntryCreateDto);
