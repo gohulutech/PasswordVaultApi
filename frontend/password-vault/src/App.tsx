@@ -17,6 +17,7 @@ function App() {
     if (!id) return;
     const passwordEntry = await getPasswordEntry(id);
     if (!passwordEntry) return;
+    setIsCreate(false);
     setSelectedPasswordEntry(passwordEntry);
   };
 
