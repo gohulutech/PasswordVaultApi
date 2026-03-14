@@ -1,14 +1,24 @@
 import { useEffect, useState } from "react";
 import type { PasswordEntryPreview } from "../models/PasswordEntryPreview";
 import { getPasswordEntries } from "../services/password-entry-service";
-import { Drawer, List, ListItem, Stack, Typography } from "@mui/material";
-import type { PasswordEntryDetail } from "../models/PasswordEntryDetail";
+import {
+  Button,
+  Drawer,
+  List,
+  ListItem,
+  Stack,
+  Typography,
+} from "@mui/material";
 
 interface ISidePanelProps {
   onPasswordEntryClick: (id: number) => void;
+  onCreatePasswordEntry: () => void;
 }
 
-export default function SidePanel({ onPasswordEntryClick }: ISidePanelProps) {
+export default function SidePanel({
+  onPasswordEntryClick,
+  onCreatePasswordEntry,
+}: ISidePanelProps) {
   const [passwordEntries, setPasswordEntries] = useState<
     PasswordEntryPreview[]
   >([]);
@@ -39,6 +49,7 @@ export default function SidePanel({ onPasswordEntryClick }: ISidePanelProps) {
         },
       }}
     >
+      <Button onClick={onCreatePasswordEntry}>Create Password Entry</Button>
       <List>
         {passwordEntries.map((passwordEntry) => (
           <ListItem

@@ -5,11 +5,13 @@ import SidePanel from "./components/SidePanel";
 import type { PasswordEntryDetail } from "./models/PasswordEntryDetail";
 import { getPasswordEntry } from "./services/password-entry-service";
 import { Box } from "@mui/material";
+import { PasswordEntryCreateForm } from "./components/PasswordEntryCreateForm/PasswordEntryCreateForm";
 
 function App() {
   const [selectedPasswordEntry, setSelectedPasswordEntry] = useState<
     PasswordEntryDetail | undefined
   >(undefined);
+  const [isCreate, setIsCreate] = useState<boolean>(false);
 
   const handlePasswordEntryClick = async (id: number) => {
     if (!id) return;
@@ -18,12 +20,24 @@ function App() {
     setSelectedPasswordEntry(passwordEntry);
   };
 
+  const handlePasswordEntryCreated = () => {
+    setIsCreate(false);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
-      <SidePanel onPasswordEntryClick={handlePasswordEntryClick} />
+      <SidePanel
+        onPasswordEntryClick={handlePasswordEntryClick}
+        onCreatePasswordEntry={() => setIsCreate(true)}
+      />
       <Box sx={{ flexGrow: 1 }}>
-        {selectedPasswordEntry && (
+        {selectedPasswordEntry && !isCreate && (
           <Detail selectedPasswordEntry={selectedPasswordEntry} />
+        )}
+        {isCreate && (
+          <PasswordEntryCreateForm
+            onPasswordEntryCreated={handlePasswordEntryCreated}
+          />
         )}
       </Box>
     </Box>
