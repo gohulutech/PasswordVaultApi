@@ -13,7 +13,7 @@ POST {{Api_HostAddress}}/api/password/Create
 Content-Type: application/json
 
 {
-    "name": "My Email",
+    "name": "test url",
     "username": "hugo@example.com",
     "encryptedPassword": "MySecretPassword123",
     "salt": "123456768900",
