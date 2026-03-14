@@ -2,7 +2,7 @@ namespace Domain;
 
 public class PasswordEntry
 {
-    private PasswordEntry(int id, string name, string username, string encryptedPassword, string salt, string IV)
+    private PasswordEntry(int id, string name, string username, string encryptedPassword)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name is required");
         if (string.IsNullOrWhiteSpace(username)) throw new ArgumentException("Username is required");
@@ -11,20 +11,16 @@ public class PasswordEntry
         this.Name = name;
         this.Username = username;
         this.EncryptedPassword = encryptedPassword;
-        this.Salt = salt;
-        this.IV = IV;
     }
 
     public int Id { get; private set; }
     public string Name { get; private set; }
     public string Username { get; private set; }
     public string EncryptedPassword { get; private set; }
-    public string Salt { get; private set; }
-    public string IV { get; private set; }
 
-    public static PasswordEntry CreatePasswordEntry(int id, string name, string username, string encryptedPassword, string salt, string IV)
+    public static PasswordEntry CreatePasswordEntry(int id, string name, string username, string encryptedPassword)
     {
-        return new PasswordEntry(id, name, username, encryptedPassword, salt, IV);
+        return new PasswordEntry(id, name, username, encryptedPassword);
     }
 
     public void UpdatePassword(string newPassword)

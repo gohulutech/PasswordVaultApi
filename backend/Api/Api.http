@@ -5,7 +5,7 @@ GET {{Api_HostAddress}}/api/password
 Accept: application/json
 
 ### Get specific password entry (detail)
-GET {{Api_HostAddress}}/api/password/1
+GET {{Api_HostAddress}}/api/password/3
 Accept: application/json
 
 ### Create a new password entry
@@ -15,7 +15,5 @@ Content-Type: application/json
 {
     "name": "test url",
     "username": "hugo@example.com",
-    "encryptedPassword": "MySecretPassword123",
-    "salt": "123456768900",
-    "iv": "2839892832"
+    "password": "MySecretPassword123"
 }

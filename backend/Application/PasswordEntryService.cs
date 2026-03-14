@@ -1,4 +1,5 @@
 using System;
+using Application.Utilities;
 using Application.ViewModels.Write;
 using Domain;
 using Domain.Interfaces;
@@ -20,27 +21,22 @@ public class PasswordEntryService(IPasswordEntryRepository passwordEntryReposito
         return new PasswordEntryDetailDto(passwordEntry.Id,
             passwordEntry.Name,
             passwordEntry.Username,
-            passwordEntry.EncryptedPassword,
-            passwordEntry.Salt,
-            passwordEntry.IV);
+            SimpleEncryptor.Decrypt(passwordEntry.EncryptedPassword));
     }
 
     public async Task<PasswordEntryDetailDto> Create(PasswordEntryCreateDto passwordEntryCreateDto)
     {
+        var encryptedPassword = SimpleEncryptor.Encrypt(passwordEntryCreateDto.Password);
         var passwordEntry = PasswordEntry.CreatePasswordEntry(0,
             passwordEntryCreateDto.Name,
             passwordEntryCreateDto.Username,
-            passwordEntryCreateDto.EncryptedPassword,
-            passwordEntryCreateDto.Salt,
-            passwordEntryCreateDto.IV);
+            encryptedPassword);
 
         var createdPasswordEntry = await passwordEntryRepository.SavePasswordEntry(passwordEntry);
         return new PasswordEntryDetailDto(createdPasswordEntry.Id,
             createdPasswordEntry.Name,
             createdPasswordEntry.Username,
-            createdPasswordEntry.EncryptedPassword,
-            createdPasswordEntry.Salt,
-            createdPasswordEntry.IV);
+            SimpleEncryptor.Decrypt(createdPasswordEntry.EncryptedPassword));
     }
 
 }
