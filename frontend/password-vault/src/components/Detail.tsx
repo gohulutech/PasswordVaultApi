@@ -1,3 +1,4 @@
+import { Stack, Typography } from "@mui/material";
 import type { PasswordEntryDetail } from "../models/PasswordEntryDetail";
 
 export interface IDetailProps {
@@ -7,5 +8,11 @@ export interface IDetailProps {
 export default function Detail({ selectedPasswordEntry }: IDetailProps) {
   if (!selectedPasswordEntry) return null;
 
-  return <div>{selectedPasswordEntry.name}</div>;
+  return (
+    <Stack>
+      <Typography>{selectedPasswordEntry.name}</Typography>
+      <Typography>{selectedPasswordEntry.username}</Typography>
+      <Typography>{selectedPasswordEntry.encryptedPassword}</Typography>
+    </Stack>
+  );
 }
