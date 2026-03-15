@@ -12,7 +12,7 @@ export default function Detail({ selectedPasswordEntry }: IDetailProps) {
     <Stack>
       <Typography>{selectedPasswordEntry.name}</Typography>
       <Typography>{selectedPasswordEntry.username}</Typography>
-      <Typography>{selectedPasswordEntry.encryptedPassword}</Typography>
+      <Typography>{selectedPasswordEntry.password}</Typography>
     </Stack>
   );
 }

@@ -3,7 +3,7 @@ import type { PasswordEntryDetail } from "../models/PasswordEntryDetail";
 import type { PasswordEntryPreview } from "../models/PasswordEntryPreview";
 
 export const getPasswordEntries = async () => {
-  const url = "http://localhost:5174/api/password";
+  const url = `${import.meta.env.VITE_PASSWORD_VAULT_API_BASE_URL}/api/password`;
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -22,7 +22,7 @@ export const getPasswordEntries = async () => {
 };
 
 export const getPasswordEntry = async (id: number) => {
-  const url = `http://localhost:5174/api/password/${id}`;
+  const url = `${import.meta.env.VITE_PASSWORD_VAULT_API_BASE_URL}/api/password/${id}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -43,7 +43,7 @@ export const getPasswordEntry = async (id: number) => {
 export const createPasswordEntry = async (
   passwordEntry: PasswordEntryCreate,
 ) => {
-  const url = `http://localhost:5174/api/password`;
+  const url = `${import.meta.env.VITE_PASSWORD_VAULT_API_BASE_URL}/api/password`;
   try {
     const response = await fetch(url, {
       method: "POST",

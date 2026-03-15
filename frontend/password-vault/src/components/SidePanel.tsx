@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import type { PasswordEntryPreview } from "../models/PasswordEntryPreview";
-import { getPasswordEntries } from "../services/password-entry-service";
 import {
   Button,
   Drawer,
