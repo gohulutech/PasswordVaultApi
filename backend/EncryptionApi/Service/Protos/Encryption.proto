@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "EncryptionGrpcService";
+
+service EncryptionService {
+  rpc Encrypt (EncryptRequest) returns (EncryptResponse);
+  rpc Decrypt (DecryptRequest) returns (DecryptResponse);
+}
+
+message EncryptRequest {
+  string plaintext = 1;
+}
+
+message EncryptResponse {
+  string ciphertext = 1;
+}
+
+message DecryptRequest {
+  string ciphertext = 1;
+}
+
+message DecryptResponse {
+  string plaintext = 1;
+}

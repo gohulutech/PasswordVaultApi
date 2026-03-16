@@ -6,7 +6,7 @@ using Domain.Interfaces;
 
 namespace Application;
 
-public class PasswordEntryService(IPasswordEntryRepository passwordEntryRepository) : IPasswordEntryService
+public class PasswordEntryService(IPasswordEntryRepository passwordEntryRepository, IEncryptionService encryptionService) : IPasswordEntryService
 {
     public async Task<List<PasswordEntryPreviewDto>> GetPasswordEntries()
     {
@@ -21,12 +21,12 @@ public class PasswordEntryService(IPasswordEntryRepository passwordEntryReposito
         return new PasswordEntryDetailDto(passwordEntry.Id,
             passwordEntry.Name,
             passwordEntry.Username,
-            SimpleEncryptor.Decrypt(passwordEntry.EncryptedPassword));
+            await encryptionService.DecryptAsync(passwordEntry.EncryptedPassword));
     }
 
     public async Task<PasswordEntryDetailDto> Create(PasswordEntryCreateDto passwordEntryCreateDto)
     {
-        var encryptedPassword = SimpleEncryptor.Encrypt(passwordEntryCreateDto.Password);
+        var encryptedPassword = await encryptionService.EncryptAsync(passwordEntryCreateDto.Password);
         var passwordEntry = PasswordEntry.CreatePasswordEntry(0,
             passwordEntryCreateDto.Name,
             passwordEntryCreateDto.Username,
@@ -36,7 +36,7 @@ public class PasswordEntryService(IPasswordEntryRepository passwordEntryReposito
         return new PasswordEntryDetailDto(createdPasswordEntry.Id,
             createdPasswordEntry.Name,
             createdPasswordEntry.Username,
-            SimpleEncryptor.Decrypt(createdPasswordEntry.EncryptedPassword));
+            await encryptionService.DecryptAsync(passwordEntry.EncryptedPassword));
     }
 
 }

@@ -1,6 +1,6 @@
+using Domain;
 using Domain.Interfaces;
 using SQLite;
-using Domain;
 
 namespace Infrastructure;
 

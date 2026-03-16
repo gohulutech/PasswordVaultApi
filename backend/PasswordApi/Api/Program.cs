@@ -3,9 +3,20 @@ using Application;
 using Domain.Interfaces;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using SQLite;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenLocalhost(5174, listenOptions => listenOptions.Protocols = HttpProtocols.Http1AndHttp2); // HTTP
+    options.ListenLocalhost(7174, listenOptions => // HTTPS port
+    {
+        listenOptions.UseHttps(); // Uses default dev certificate
+        listenOptions.Protocols = HttpProtocols.Http1AndHttp2; // support HTTP/2 for gRPC
+    });
+});
 
 builder.Services.AddCors((options) =>
 {
@@ -27,6 +38,11 @@ builder.Services.AddSingleton<SQLiteAsyncConnection>(sp =>
 
 builder.Services.AddSingleton<IPasswordEntryRepository, PasswordEntryRepository>();
 builder.Services.AddScoped<IPasswordEntryService, PasswordEntryService>();
+builder.Services.AddSingleton<IEncryptionService>(sp =>
+{
+    // Replace the URL with your gRPC server address
+    return new EncryptionGrpcClient("https://localhost:7263");
+});
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
