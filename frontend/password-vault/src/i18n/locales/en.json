@@ -19,7 +19,8 @@
     "noData": "No data available"
   },
   "sidePanel": {
-    "createEntry": "+ Create Password Entry"
+    "createEntry": "+ Create Password Entry",
+    "savedPasswords": "Saved Passwords"
   },
   "passwordToggle": {
     "hide": "Hide the password",

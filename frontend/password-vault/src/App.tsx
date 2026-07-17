@@ -51,6 +51,7 @@ function App() {
         onPasswordEntryClick={handlePasswordEntryClick}
         onCreatePasswordEntry={() => setIsCreate(true)}
         passwordEntries={passwordEntries}
+        selectedEntryId={selectedPasswordEntry?.id}
       />
       <Box sx={{ flexGrow: 1 }}>
         {selectedPasswordEntry && !isCreate && (
