@@ -7,6 +7,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 interface ISidePanelProps {
   onPasswordEntryClick: (id: number) => void;
@@ -19,6 +20,7 @@ export default function SidePanel({
   onCreatePasswordEntry,
   passwordEntries,
 }: ISidePanelProps) {
+  const { t } = useTranslation();
   const handleSelectPasswordEntry = (passwordEntry: PasswordEntryPreview) =>
     onPasswordEntryClick(passwordEntry.id);
 
@@ -47,7 +49,7 @@ export default function SidePanel({
           marginTop: "14px",
         }}
       >
-        + Create Password Entry
+        {t('sidePanel.createEntry')}
       </Button>
       <List>
         {passwordEntries.map((passwordEntry) => (

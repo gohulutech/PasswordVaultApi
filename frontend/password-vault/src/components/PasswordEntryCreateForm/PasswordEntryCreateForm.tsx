@@ -6,6 +6,7 @@ import PasswordTextField from "./PasswordTextField";
 import { createPasswordEntry } from "../../services/password-entry-service";
 import type { PasswordEntryCreate } from "../../models/PasswordEntryCreate";
 import type { PasswordEntryDetail } from "../../models/PasswordEntryDetail";
+import { useTranslation } from "react-i18next";
 
 interface IFormInput {
   name: string;
@@ -22,6 +23,7 @@ interface IPasswordEntryCreateFormProps {
 export function PasswordEntryCreateForm({
   onPasswordEntryCreated,
 }: IPasswordEntryCreateFormProps) {
+  const { t } = useTranslation();
   const methods = useForm<IFormInput>({
     defaultValues: {
       name: "",
@@ -54,7 +56,7 @@ export function PasswordEntryCreateForm({
               onClick={methods.handleSubmit(onSubmit)}
               sx={{ backgroundColor: "primary.main", textTransform: "none" }}
             >
-              Create
+              {t('common.create')}
             </Button>
           </Stack>
         </CardContent>

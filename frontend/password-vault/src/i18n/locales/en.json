@@ -1,0 +1,93 @@
+{
+  "common": {
+    "create": "Create",
+    "name": "Name",
+    "userName": "User Name",
+    "password": "Password",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "noData": "No data available"
+  },
+  "sidePanel": {
+    "createEntry": "+ Create Password Entry"
+  },
+  "passwordToggle": {
+    "hide": "Hide the password",
+    "show": "Display the password"
+  },
+  "detail": {
+    "name": "Name",
+    "username": "Username",
+    "password": "Password"
+  },
+  "mui": {
+    "checkBox": {
+      "defaultLabel": "Toggle",
+      "ariaLabel": "Toggle checkbox"
+    },
+    "switch": {
+      "defaultLabel": "Toggle",
+      "ariaLabel": "Toggle switch"
+    },
+    "slider": {
+      "ariaLabel": "Slider",
+      "valueLabel": "Value"
+    },
+    "rating": {
+      "ariaLabel": "Rating"
+    },
+    "loadingProgress": {
+      "ariaLabel": "Loading"
+    },
+    "chip": {
+      "deleteIconAriaLabel": "Delete"
+    },
+    "pagination": {
+      "ariaLabel": "Pagination",
+      "previousAriaLabel": "Previous page",
+      "nextAriaLabel": "Next page",
+      "firstAriaLabel": "First page",
+      "lastAriaLabel": "Last page",
+      "itemsPerPage": "Items per page:",
+      "of": "of"
+    },
+    "tablePagination": {
+      "ariaLabel": "Rows per page",
+      "previousAriaLabel": "Previous page",
+      "nextAriaLabel": "Next page",
+      "selectLabel": "Rows per page",
+      "of": "of"
+    },
+    "select": {
+      "ariaLabel": "Select",
+      "clearAriaLabel": "Clear",
+      "openAriaLabel": "Open"
+    },
+    "autocomplete": {
+      "clearAriaLabel": "Clear",
+      "openAriaLabel": "Open"
+    },
+    "dialog": {
+      "closeAriaLabel": "Close"
+    },
+    "drawer": {
+      "closeAriaLabel": "Close"
+    },
+    "modal": {
+      "closeAriaLabel": "Close"
+    },
+    "tooltip": {
+      "openAriaLabel": "Open"
+    }
+  }
+}

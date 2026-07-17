@@ -5,16 +5,18 @@ import IconButton from "@mui/material/IconButton";
 import ControlledTextField from "../ControlledTextField/ControlledTextField";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useTranslation } from "react-i18next";
 
 export default function PasswordTextField() {
   const { control } = useFormContext();
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <ControlledTextField
       controllerProps={{ name: "password", control }}
       textFieldProps={{
-        label: "Password",
+        label: t('common.password'),
         sx: { width: "100%" },
         type: showPassword ? "text" : "password",
         slotProps: {
@@ -23,7 +25,7 @@ export default function PasswordTextField() {
               <InputAdornment position="end">
                 <IconButton
                   aria-label={
-                    showPassword ? "Hide the password" : "Display the password"
+                    showPassword ? t('passwordToggle.hide') : t('passwordToggle.show')
                   }
                   onClick={() => setShowPassword((prev) => !prev)}
                   edge="end"

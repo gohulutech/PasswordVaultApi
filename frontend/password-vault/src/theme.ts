@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material/styles";
+import getMuiComponents from "./i18n/muiComponents";
 
 const theme = createTheme({
   palette: {
@@ -13,6 +14,7 @@ const theme = createTheme({
       paper: "#ffffff",
     },
   },
+  components: getMuiComponents(),
 });
 
 export default theme;
