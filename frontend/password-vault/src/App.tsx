@@ -46,7 +46,7 @@ function App() {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <SidePanel
         onPasswordEntryClick={handlePasswordEntryClick}
         onCreatePasswordEntry={() => setIsCreate(true)}

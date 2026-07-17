@@ -1,7 +1,7 @@
 import { FormProvider, useForm, type SubmitHandler } from "react-hook-form";
 import NameTextField from "./NameTextField";
 import UserameTextField from "./UsernameTextField";
-import { Button, Stack } from "@mui/material";
+import { Button, Card, CardContent, Stack } from "@mui/material";
 import PasswordTextField from "./PasswordTextField";
 import { createPasswordEntry } from "../../services/password-entry-service";
 import type { PasswordEntryCreate } from "../../models/PasswordEntryCreate";
@@ -42,13 +42,23 @@ export function PasswordEntryCreateForm({
   };
 
   return (
-    <FormProvider {...methods}>
-      <Stack sx={{ gap: "16px" }}>
-        <NameTextField />
-        <UserameTextField />
-        <PasswordTextField />
-        <Button onClick={methods.handleSubmit(onSubmit)}>Create</Button>
-      </Stack>
-    </FormProvider>
+    <Card sx={{ width: "400px", margin: 1 }}>
+      <FormProvider {...methods}>
+        <CardContent>
+          <Stack sx={{ gap: "16px", alignItems: "start" }}>
+            <NameTextField />
+            <UserameTextField />
+            <PasswordTextField />
+            <Button
+              variant="contained"
+              onClick={methods.handleSubmit(onSubmit)}
+              sx={{ backgroundColor: "primary.main", textTransform: "none" }}
+            >
+              Create
+            </Button>
+          </Stack>
+        </CardContent>
+      </FormProvider>
+    </Card>
   );
 }

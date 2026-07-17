@@ -34,10 +34,21 @@ export default function SidePanel({
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
+          padding: 1,
         },
       }}
     >
-      <Button onClick={onCreatePasswordEntry}>Create Password Entry</Button>
+      <Button
+        variant="contained"
+        onClick={onCreatePasswordEntry}
+        sx={{
+          backgroundColor: "secondary.main",
+          textTransform: "none",
+          marginTop: "14px",
+        }}
+      >
+        + Create Password Entry
+      </Button>
       <List>
         {passwordEntries.map((passwordEntry) => (
           <ListItem

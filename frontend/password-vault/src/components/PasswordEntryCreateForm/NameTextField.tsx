@@ -9,6 +9,7 @@ export default function NameTextField() {
       controllerProps={{ name: "name", control: control }}
       textFieldProps={{
         label: "Name",
+        sx: { width: "100%" },
       }}
     ></ControlledTextField>
   );

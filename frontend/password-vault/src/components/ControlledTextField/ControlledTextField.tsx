@@ -22,7 +22,7 @@ export default function ControlledTextField<T extends FieldValues>({
   return (
     <TextField
       size="small"
-      variant="filled"
+      variant="outlined"
       {...field}
       {...textFieldProps}
       error={!!error}

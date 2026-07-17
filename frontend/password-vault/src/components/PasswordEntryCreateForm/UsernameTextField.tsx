@@ -9,6 +9,7 @@ export default function UserameTextField() {
       controllerProps={{ name: "username", control: control }}
       textFieldProps={{
         label: "User Name",
+        sx: { width: "100%" },
       }}
     ></ControlledTextField>
   );
