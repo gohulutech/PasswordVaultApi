@@ -29,5 +29,14 @@ namespace Api
             var createdEntry = await passwordEntryService.Create(passwordEntryCreateDto);
             return CreatedAtAction(nameof(GetPasswordEntry), new { id = createdEntry.Id }, createdEntry);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePasswordEntry(int id, [FromBody] PasswordEntryUpdateDto passwordEntryUpdateDto)
+        {
+            if (id != passwordEntryUpdateDto.Id) return BadRequest();
+            var updatedEntry = await passwordEntryService.Update(passwordEntryUpdateDto);
+            if (updatedEntry == null) return NotFound();
+            return Ok(updatedEntry);
+        }
     }
 }

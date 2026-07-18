@@ -57,19 +57,20 @@ export default function SidePanel({
       <Typography variant="subtitle2" sx={{ marginTop: 2, marginBottom: 1 }}>
         {t("sidePanel.savedPasswords")}
       </Typography>
-      <List>
+      <List sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         {passwordEntries.map((passwordEntry) => (
           <Card
+            key={passwordEntry.id}
             sx={{
               cursor: "pointer",
-              backgroundColor: selectedEntryId === passwordEntry.id ? "#f1f5f9" : "transparent",
+              backgroundColor:
+                selectedEntryId === passwordEntry.id
+                  ? "#f1f5f9"
+                  : "transparent",
               "&:hover": { backgroundColor: "#f1f5f9" },
             }}
           >
-            <ListItem
-              key={passwordEntry.id}
-              onClick={() => handleSelectPasswordEntry(passwordEntry)}
-            >
+            <ListItem onClick={() => handleSelectPasswordEntry(passwordEntry)}>
               <Stack>
                 <Typography
                   sx={{

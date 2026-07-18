@@ -21,7 +21,6 @@ export default function ControlledTextField<T extends FieldValues>({
 
   return (
     <TextField
-      size="small"
       variant="outlined"
       {...field}
       {...textFieldProps}

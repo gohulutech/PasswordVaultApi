@@ -39,4 +39,23 @@ public class PasswordEntryService(IPasswordEntryRepository passwordEntryReposito
             SimpleEncryptor.Decrypt(createdPasswordEntry.EncryptedPassword));
     }
 
+    public async Task<PasswordEntryDetailDto?> Update(PasswordEntryUpdateDto passwordEntryUpdateDto)
+    {
+        var existingEntry = await passwordEntryRepository.GetPasswordEntry(passwordEntryUpdateDto.Id);
+        if (existingEntry == null) return null;
+
+        var encryptedPassword = SimpleEncryptor.Encrypt(passwordEntryUpdateDto.Password);
+        var updatedEntry = PasswordEntry.CreatePasswordEntry(
+            passwordEntryUpdateDto.Id,
+            passwordEntryUpdateDto.Name,
+            passwordEntryUpdateDto.Username,
+            encryptedPassword);
+
+        var savedEntry = await passwordEntryRepository.SavePasswordEntry(updatedEntry);
+        return new PasswordEntryDetailDto(savedEntry.Id,
+            savedEntry.Name,
+            savedEntry.Username,
+            SimpleEncryptor.Decrypt(savedEntry.EncryptedPassword));
+    }
+
 }

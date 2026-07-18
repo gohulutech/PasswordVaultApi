@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import Detail from "./components/Detail";
 import SidePanel from "./components/SidePanel";
 import type { PasswordEntryDetail } from "./models/PasswordEntryDetail";
 import {
@@ -8,7 +7,7 @@ import {
   getPasswordEntry,
 } from "./services/password-entry-service";
 import { Box } from "@mui/material";
-import { PasswordEntryCreateForm } from "./components/PasswordEntryCreateForm/PasswordEntryCreateForm";
+import { PasswordEntryForm } from "./components/PasswordEntryForm/PasswordEntryForm";
 import type { PasswordEntryPreview } from "./models/PasswordEntryPreview";
 
 function App() {
@@ -36,7 +35,7 @@ function App() {
     setSelectedPasswordEntry(passwordEntry);
   };
 
-  const handlePasswordEntryCreated = async (
+  const handlePasswordEntrySaved = async (
     newPasswordEntry: PasswordEntryDetail,
   ) => {
     setIsCreate(false);
@@ -45,21 +44,30 @@ function App() {
     setSelectedPasswordEntry(newPasswordEntry);
   };
 
+  const handleOnCreate = () => {
+    setSelectedPasswordEntry(undefined);
+    setIsCreate(true);
+  };
+
+  const getDefaultValues = () => {
+    if (!selectedPasswordEntry) return null;
+    const { encryptedPassword, ...entry } = selectedPasswordEntry;
+    return { ...entry, password: encryptedPassword };
+  };
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <SidePanel
         onPasswordEntryClick={handlePasswordEntryClick}
-        onCreatePasswordEntry={() => setIsCreate(true)}
+        onCreatePasswordEntry={() => handleOnCreate()}
         passwordEntries={passwordEntries}
         selectedEntryId={selectedPasswordEntry?.id}
       />
       <Box sx={{ flexGrow: 1 }}>
-        {selectedPasswordEntry && !isCreate && (
-          <Detail selectedPasswordEntry={selectedPasswordEntry} />
-        )}
-        {isCreate && (
-          <PasswordEntryCreateForm
-            onPasswordEntryCreated={handlePasswordEntryCreated}
+        {(isCreate || selectedPasswordEntry) && (
+          <PasswordEntryForm
+            key={selectedPasswordEntry?.id}
+            onPasswordEntrySaved={handlePasswordEntrySaved}
+            defaultValues={getDefaultValues() ?? undefined}
           />
         )}
       </Box>

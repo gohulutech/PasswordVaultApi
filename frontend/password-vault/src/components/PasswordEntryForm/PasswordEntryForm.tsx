@@ -3,29 +3,36 @@ import NameTextField from "./NameTextField";
 import UserameTextField from "./UsernameTextField";
 import { Button, Card, CardContent, Stack } from "@mui/material";
 import PasswordTextField from "./PasswordTextField";
-import { createPasswordEntry } from "../../services/password-entry-service";
+import {
+  createPasswordEntry,
+  updatePasswordEntry,
+} from "../../services/password-entry-service";
 import type { PasswordEntryCreate } from "../../models/PasswordEntryCreate";
+import type { PasswordEntryUpdate } from "../../models/PasswordEntryUpdate";
 import type { PasswordEntryDetail } from "../../models/PasswordEntryDetail";
 import { useTranslation } from "react-i18next";
 
-interface IFormInput {
+export interface IFormInput {
+  id?: number;
   name: string;
   username: string;
   password: string;
 }
 
-interface IPasswordEntryCreateFormProps {
-  onPasswordEntryCreated: (
+interface IPasswordEntryFormProps {
+  onPasswordEntrySaved: (
     newPasswordEntry: PasswordEntryDetail,
   ) => Promise<void>;
+  defaultValues?: IFormInput;
 }
 
-export function PasswordEntryCreateForm({
-  onPasswordEntryCreated,
-}: IPasswordEntryCreateFormProps) {
+export function PasswordEntryForm({
+  onPasswordEntrySaved,
+  defaultValues,
+}: IPasswordEntryFormProps) {
   const { t } = useTranslation();
   const methods = useForm<IFormInput>({
-    defaultValues: {
+    defaultValues: defaultValues ?? {
       name: "",
       username: "",
       password: "",
@@ -33,14 +40,27 @@ export function PasswordEntryCreateForm({
   });
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    const newPasswordEntry: PasswordEntryCreate = {
-      name: data.name,
-      username: data.username,
-      password: data.password,
-    };
-    const passwordEntryDetail = await createPasswordEntry(newPasswordEntry);
+    let passwordEntryDetail: PasswordEntryDetail | undefined;
+
+    if (data.id) {
+      const passwordEntryUpdate: PasswordEntryUpdate = {
+        id: data.id,
+        name: data.name,
+        username: data.username,
+        password: data.password,
+      };
+      passwordEntryDetail = await updatePasswordEntry(passwordEntryUpdate);
+    } else {
+      const newPasswordEntry: PasswordEntryCreate = {
+        name: data.name,
+        username: data.username,
+        password: data.password,
+      };
+      passwordEntryDetail = await createPasswordEntry(newPasswordEntry);
+    }
+
     if (!passwordEntryDetail) return;
-    await onPasswordEntryCreated(passwordEntryDetail);
+    await onPasswordEntrySaved(passwordEntryDetail);
   };
 
   return (
@@ -56,7 +76,7 @@ export function PasswordEntryCreateForm({
               onClick={methods.handleSubmit(onSubmit)}
               sx={{ backgroundColor: "primary.main", textTransform: "none" }}
             >
-              {t('common.create')}
+              {methods.getValues().id ? t("common.save") : t("common.create")}
             </Button>
           </Stack>
         </CardContent>
