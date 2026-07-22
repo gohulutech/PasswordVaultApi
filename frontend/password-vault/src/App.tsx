@@ -1,23 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import SidePanel from "./components/SidePanel";
 import type { PasswordEntryDetail } from "./models/PasswordEntryDetail";
-import {
-  getPasswordEntries,
-  getPasswordEntry,
-} from "./services/password-entry-service";
+import { getPasswordEntries, getPasswordEntry } from "./services/password-entry-service";
 import { Box } from "@mui/material";
 import { PasswordEntryForm } from "./components/PasswordEntryForm/PasswordEntryForm";
 import type { PasswordEntryPreview } from "./models/PasswordEntryPreview";
 
 function App() {
-  const [selectedPasswordEntry, setSelectedPasswordEntry] = useState<
-    PasswordEntryDetail | undefined
-  >(undefined);
+  const [selectedPasswordEntry, setSelectedPasswordEntry] = useState<PasswordEntryDetail | undefined>(undefined);
   const [isCreate, setIsCreate] = useState<boolean>(false);
-  const [passwordEntries, setPasswordEntries] = useState<
-    PasswordEntryPreview[]
-  >([]);
+  const [filterText, setFilterText] = useState<string>("");
+  const [passwordEntries, setPasswordEntries] = useState<PasswordEntryPreview[]>([]);
 
   useEffect(() => {
     getPasswordEntries()
@@ -35,9 +29,7 @@ function App() {
     setSelectedPasswordEntry(passwordEntry);
   };
 
-  const handlePasswordEntrySaved = async (
-    newPasswordEntry: PasswordEntryDetail,
-  ) => {
+  const handlePasswordEntrySaved = async (newPasswordEntry: PasswordEntryDetail) => {
     setIsCreate(false);
     const passwordEntries = await getPasswordEntries();
     if (passwordEntries) setPasswordEntries(passwordEntries);
@@ -49,6 +41,11 @@ function App() {
     setIsCreate(true);
   };
 
+  const filteredPasswordEntries = useMemo(
+    () => passwordEntries.filter((entry) => entry.name.includes(filterText) || entry.username.includes(filterText)),
+    [passwordEntries, filterText],
+  );
+
   const getDefaultValues = () => {
     if (!selectedPasswordEntry) return null;
     const { encryptedPassword, ...entry } = selectedPasswordEntry;
@@ -59,8 +56,10 @@ function App() {
       <SidePanel
         onPasswordEntryClick={handlePasswordEntryClick}
         onCreatePasswordEntry={() => handleOnCreate()}
-        passwordEntries={passwordEntries}
+        passwordEntries={filteredPasswordEntries}
         selectedEntryId={selectedPasswordEntry?.id}
+        setFilterText={setFilterText}
+        filterText={filterText}
       />
       <Box sx={{ flexGrow: 1 }}>
         {(isCreate || selectedPasswordEntry) && (

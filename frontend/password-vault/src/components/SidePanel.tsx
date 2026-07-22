@@ -1,13 +1,6 @@
 import type { PasswordEntryPreview } from "../models/PasswordEntryPreview";
-import {
-  Button,
-  Card,
-  Drawer,
-  List,
-  ListItem,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Button, Card, Drawer, List, ListItem, Stack, TextField, Typography } from "@mui/material";
+import type { ChangeEventHandler } from "react";
 import { useTranslation } from "react-i18next";
 
 interface ISidePanelProps {
@@ -15,6 +8,8 @@ interface ISidePanelProps {
   onCreatePasswordEntry: () => void;
   passwordEntries: PasswordEntryPreview[];
   selectedEntryId?: number;
+  setFilterText: (filterText: string) => void;
+  filterText: string;
 }
 
 export default function SidePanel({
@@ -22,12 +17,17 @@ export default function SidePanel({
   onCreatePasswordEntry,
   passwordEntries,
   selectedEntryId,
+  setFilterText,
+  filterText,
 }: ISidePanelProps) {
   const { t } = useTranslation();
-  const handleSelectPasswordEntry = (passwordEntry: PasswordEntryPreview) =>
-    onPasswordEntryClick(passwordEntry.id);
+  const handleSelectPasswordEntry = (passwordEntry: PasswordEntryPreview) => onPasswordEntryClick(passwordEntry.id);
 
-  const drawerWidth = 240;
+  const drawerWidth = 260;
+
+  const handleSearchPasswordChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement, Element> = (event) => {
+    setFilterText(event.target.value);
+  };
 
   return (
     <Drawer
@@ -54,6 +54,13 @@ export default function SidePanel({
       >
         {t("sidePanel.createEntry")}
       </Button>
+      <TextField
+        variant="outlined"
+        label="Search"
+        sx={{ marginTop: 2, marginBottom: 1 }}
+        onChange={handleSearchPasswordChange}
+        value={filterText}
+      />
       <Typography variant="subtitle2" sx={{ marginTop: 2, marginBottom: 1 }}>
         {t("sidePanel.savedPasswords")}
       </Typography>
@@ -63,10 +70,7 @@ export default function SidePanel({
             key={passwordEntry.id}
             sx={{
               cursor: "pointer",
-              backgroundColor:
-                selectedEntryId === passwordEntry.id
-                  ? "#f1f5f9"
-                  : "transparent",
+              backgroundColor: selectedEntryId === passwordEntry.id ? "#f1f5f9" : "transparent",
               "&:hover": { backgroundColor: "#f1f5f9" },
             }}
           >
