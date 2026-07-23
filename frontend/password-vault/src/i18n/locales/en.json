@@ -31,6 +31,16 @@
     "username": "Username",
     "password": "Password"
   },
+  "signInModal": {
+    "title": "Password Vault Security",
+    "signIn": "Sign In",
+    "emailLabel": "Email Address",
+    "passwordLabel": "Password",
+    "logIn": "Log In",
+    "quickAccess": "⚡ Quick Portfolio Access:",
+    "guestDemo": "🚀 Explore with Guest Demo Account (Instant)",
+    "guestNote": "💡 Note: Guest demo runs in an isolated tenant with pre-loaded sample data. No registration required."
+  },
   "mui": {
     "checkBox": {
       "defaultLabel": "Toggle",
