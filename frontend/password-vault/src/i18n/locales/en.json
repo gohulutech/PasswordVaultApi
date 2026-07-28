@@ -62,7 +62,10 @@
     "loggingIn": "Signing in...",
     "registering": "Creating account...",
     "loggedOut": "You have been logged out",
-    "sessionExpired": "Session expired. Please sign in again."
+    "sessionExpired": "Session expired. Please sign in again.",
+    "rateLimitExceeded": "Too many attempts. Please wait a minute before trying again.",
+    "serverError": "An unexpected error occurred. Please try again.",
+    "networkError": "Unable to connect. Please check your connection."
   },
   "mui": {
     "checkBox": {

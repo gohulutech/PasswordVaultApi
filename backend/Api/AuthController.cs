@@ -2,11 +2,13 @@ using Application;
 using Application.ViewModels.Write;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Api;
 
 [Route("api/auth")]
 [ApiController]
+[EnableRateLimiting("auth-endpoints")]
 public class AuthController(IAuthService authService) : ControllerBase
 {
     [AllowAnonymous]

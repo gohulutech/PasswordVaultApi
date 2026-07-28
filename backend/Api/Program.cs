@@ -1,10 +1,12 @@
 using System.Text;
+using System.Threading.RateLimiting;
 using Api;
 using Application;
 using Domain.Interfaces;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using SQLite;
 
@@ -64,6 +66,19 @@ builder.Services.AddAuthorization(options =>
         .Build();
 });
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.AddFixedWindowLimiter("auth-endpoints", opt =>
+    {
+        opt.PermitLimit = 5;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
+    });
+});
+
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
@@ -93,7 +108,8 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 var app = builder.Build();
 
-app.UseCors("AllowAll");
+app.UseCors("AllowFrontend");
+app.UseRateLimiter();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
