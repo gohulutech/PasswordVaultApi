@@ -8,15 +8,15 @@ namespace Application;
 
 public class PasswordEntryService(IPasswordEntryRepository passwordEntryRepository) : IPasswordEntryService
 {
-    public async Task<List<PasswordEntryPreviewDto>> GetPasswordEntries()
+    public async Task<List<PasswordEntryPreviewDto>> GetPasswordEntries(int userId)
     {
-        var passwordEntries = await passwordEntryRepository.GetPasswordEntries();
+        var passwordEntries = await passwordEntryRepository.GetPasswordEntries(userId);
         return passwordEntries.Select(passwordEntry => new PasswordEntryPreviewDto(passwordEntry.Id, passwordEntry.Name, passwordEntry.Username)).ToList();
     }
 
-    public async Task<PasswordEntryDetailDto?> GetPasswordEntry(int id)
+    public async Task<PasswordEntryDetailDto?> GetPasswordEntry(int id, int userId)
     {
-        var passwordEntry = await passwordEntryRepository.GetPasswordEntry(id);
+        var passwordEntry = await passwordEntryRepository.GetPasswordEntry(id, userId);
         if (passwordEntry == null) return null;
         return new PasswordEntryDetailDto(passwordEntry.Id,
             passwordEntry.Name,
@@ -24,10 +24,11 @@ public class PasswordEntryService(IPasswordEntryRepository passwordEntryReposito
             SimpleEncryptor.Decrypt(passwordEntry.EncryptedPassword));
     }
 
-    public async Task<PasswordEntryDetailDto> Create(PasswordEntryCreateDto passwordEntryCreateDto)
+    public async Task<PasswordEntryDetailDto> Create(int userId, PasswordEntryCreateDto passwordEntryCreateDto)
     {
         var encryptedPassword = SimpleEncryptor.Encrypt(passwordEntryCreateDto.Password);
         var passwordEntry = PasswordEntry.CreatePasswordEntry(0,
+            userId,
             passwordEntryCreateDto.Name,
             passwordEntryCreateDto.Username,
             encryptedPassword);
@@ -39,14 +40,15 @@ public class PasswordEntryService(IPasswordEntryRepository passwordEntryReposito
             SimpleEncryptor.Decrypt(createdPasswordEntry.EncryptedPassword));
     }
 
-    public async Task<PasswordEntryDetailDto?> Update(PasswordEntryUpdateDto passwordEntryUpdateDto)
+    public async Task<PasswordEntryDetailDto?> Update(int userId, PasswordEntryUpdateDto passwordEntryUpdateDto)
     {
-        var existingEntry = await passwordEntryRepository.GetPasswordEntry(passwordEntryUpdateDto.Id);
+        var existingEntry = await passwordEntryRepository.GetPasswordEntry(passwordEntryUpdateDto.Id, userId);
         if (existingEntry == null) return null;
 
         var encryptedPassword = SimpleEncryptor.Encrypt(passwordEntryUpdateDto.Password);
         var updatedEntry = PasswordEntry.CreatePasswordEntry(
             passwordEntryUpdateDto.Id,
+            userId,
             passwordEntryUpdateDto.Name,
             passwordEntryUpdateDto.Username,
             encryptedPassword);

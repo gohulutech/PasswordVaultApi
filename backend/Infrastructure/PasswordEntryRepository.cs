@@ -6,15 +6,19 @@ namespace Infrastructure;
 
 public class PasswordEntryRepository(SQLiteAsyncConnection db) : IPasswordEntryRepository
 {
-    public async Task<List<PasswordEntry>> GetPasswordEntries()
+    public async Task<List<PasswordEntry>> GetPasswordEntries(int userId)
     {
-        var result = await db.Table<PasswordEntryEntity>().ToListAsync();
+        var result = await db.Table<PasswordEntryEntity>()
+            .Where(e => e.UserId == userId)
+            .ToListAsync();
         return result.Select(MapFromEntity).ToList();
     }
 
-    public async Task<PasswordEntry?> GetPasswordEntry(int id)
+    public async Task<PasswordEntry?> GetPasswordEntry(int id, int userId)
     {
-        var entity = await db.FindAsync<PasswordEntryEntity>(id);
+        var entity = await db.Table<PasswordEntryEntity>()
+            .Where(e => e.Id == id && e.UserId == userId)
+            .FirstOrDefaultAsync();
         if (entity == null) return null;
         return MapFromEntity(entity);
     }
@@ -26,6 +30,7 @@ public class PasswordEntryRepository(SQLiteAsyncConnection db) : IPasswordEntryR
         {
             entity = new PasswordEntryEntity
             {
+                UserId = passwordEntry.UserId,
                 Name = passwordEntry.Name,
                 Username = passwordEntry.Username,
                 EncryptedPassword = passwordEntry.EncryptedPassword,
@@ -34,6 +39,7 @@ public class PasswordEntryRepository(SQLiteAsyncConnection db) : IPasswordEntryR
             return MapFromEntity(entity);
         }
 
+        entity.UserId = passwordEntry.UserId;
         entity.Name = passwordEntry.Name;
         entity.Username = passwordEntry.Username;
         entity.EncryptedPassword = passwordEntry.EncryptedPassword;
@@ -44,6 +50,7 @@ public class PasswordEntryRepository(SQLiteAsyncConnection db) : IPasswordEntryR
     private PasswordEntry MapFromEntity(PasswordEntryEntity entity)
     {
         return PasswordEntry.CreatePasswordEntry(entity.Id,
+            entity.UserId,
             entity.Name,
             entity.Username,
             entity.EncryptedPassword);
