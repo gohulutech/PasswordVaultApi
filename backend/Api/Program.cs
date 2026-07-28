@@ -29,6 +29,8 @@ builder.Services.AddSingleton<SQLiteAsyncConnection>(sp =>
 });
 
 builder.Services.AddSingleton<IPasswordEntryRepository, PasswordEntryRepository>();
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IPasswordEntryService, PasswordEntryService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 

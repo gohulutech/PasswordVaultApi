@@ -1,11 +1,10 @@
-import { AccountCircle, Lock, Visibility, VisibilityOff } from "@mui/icons-material";
+import { AccountCircle, Lock, Person, Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Alert,
   Button,
   Dialog,
   DialogContent,
   DialogTitle,
-  Divider,
   IconButton,
   InputAdornment,
   Link,
@@ -17,27 +16,44 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../contexts/AuthContext";
 
-interface ISignInModalProps {
+interface IRegisterModalProps {
   open: boolean;
   onClose: () => void;
-  onSwitchToRegister: () => void;
+  onSwitchToSignIn: () => void;
 }
 
-export default function SignInModal({ open, onClose, onSwitchToRegister }: ISignInModalProps) {
+export default function RegisterModal({ open, onClose, onSwitchToSignIn }: IRegisterModalProps) {
   const { t } = useTranslation();
-  const { login } = useAuth();
+  const { register } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
-    const success = await login({ email, password });
+    if (password !== confirmPassword) {
+      setError(t("registerModal.passwordMismatch"));
+      return;
+    }
+
+    if (username.length < 3) {
+      setError(t("registerModal.usernameMinLength"));
+      return;
+    }
+
+    if (password.length < 6) {
+      setError(t("registerModal.passwordMinLength"));
+      return;
+    }
+
+    setLoading(true);
+    const success = await register({ email, username, password });
     if (success) {
       onClose();
     } else {
@@ -49,17 +65,13 @@ export default function SignInModal({ open, onClose, onSwitchToRegister }: ISign
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth sx={{ borderRadius: 2, overflow: "hidden" }}>
       <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", width: "100%" }}>
-        <Lock /> {t("signInModal.title")}
+        <Lock /> {t("registerModal.title")}
       </DialogTitle>
       <DialogContent sx={{ px: 4, py: 3 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 500, mb: 2 }}>
-          {t("signInModal.signIn")}
-        </Typography>
-
         <Stack component="form" onSubmit={handleSubmit} spacing={2} sx={{ mt: 1 }}>
           {error && <Alert severity="error">{error}</Alert>}
           <TextField
-            label={t("signInModal.emailLabel")}
+            label={t("registerModal.emailLabel")}
             type="email"
             fullWidth
             variant="outlined"
@@ -77,7 +89,24 @@ export default function SignInModal({ open, onClose, onSwitchToRegister }: ISign
             }}
           />
           <TextField
-            label={t("signInModal.passwordLabel")}
+            label={t("registerModal.usernameLabel")}
+            fullWidth
+            variant="outlined"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Person />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+          <TextField
+            label={t("registerModal.passwordLabel")}
             type={showPassword ? "text" : "password"}
             fullWidth
             variant="outlined"
@@ -105,44 +134,43 @@ export default function SignInModal({ open, onClose, onSwitchToRegister }: ISign
               },
             }}
           />
+          <TextField
+            label={t("registerModal.confirmPasswordLabel")}
+            type={showPassword ? "text" : "password"}
+            fullWidth
+            variant="outlined"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
           <Button
             type="submit"
-            variant="outlined"
+            variant="contained"
             fullWidth
             sx={{ py: 1, textTransform: "none" }}
             disabled={loading}
           >
-            {loading ? t("auth.loggingIn") : t("signInModal.logIn")}
+            {loading ? t("auth.registering") : t("registerModal.createAccount")}
           </Button>
         </Stack>
 
         <Stack sx={{ alignItems: "center", mt: 2 }}>
           <Typography variant="body2" color="text.secondary">
-            {t("signInModal.noAccount")}{" "}
-            <Link component="button" variant="body2" onClick={onSwitchToRegister} sx={{ cursor: "pointer" }}>
-              {t("signInModal.register")}
+            {t("registerModal.alreadyHaveAccount")}{" "}
+            <Link component="button" variant="body2" onClick={onSwitchToSignIn} sx={{ cursor: "pointer" }}>
+              {t("registerModal.signIn")}
             </Link>
           </Typography>
         </Stack>
-
-        <Divider sx={{ my: 3 }}>
-          <Typography variant="body2" color="text.secondary">
-            OR
-          </Typography>
-        </Divider>
-
-        <Stack spacing={2}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
-            {t("signInModal.quickAccess")}
-          </Typography>
-          <Button variant="contained" fullWidth sx={{ py: 1, textTransform: "none" }}>
-            {t("signInModal.guestDemo")}
-          </Button>
-        </Stack>
-
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 3, fontSize: "0.8rem" }}>
-          {t("signInModal.guestNote")}
-        </Typography>
       </DialogContent>
     </Dialog>
   );

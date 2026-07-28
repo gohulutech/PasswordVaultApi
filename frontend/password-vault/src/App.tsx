@@ -2,24 +2,34 @@ import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import SidePanel from "./components/SidePanel";
 import type { PasswordEntryDetail } from "./models/PasswordEntryDetail";
-import { getPasswordEntries, getPasswordEntry } from "./services/password-entry-service";
+import { getPasswordEntries, getPasswordEntry, setAccessTokenProvider } from "./services/password-entry-service";
 import { Box } from "@mui/material";
 import { PasswordEntryForm } from "./components/PasswordEntryForm/PasswordEntryForm";
 import type { PasswordEntryPreview } from "./models/PasswordEntryPreview";
+import SignInModal from "./components/SignInModal";
+import RegisterModal from "./components/RegisterModal";
+import { useAuth } from "./contexts/AuthContext";
 
 function App() {
+  const { isAuthenticated, accessToken, refreshAccessToken } = useAuth();
   const [selectedPasswordEntry, setSelectedPasswordEntry] = useState<PasswordEntryDetail | undefined>(undefined);
   const [isCreate, setIsCreate] = useState<boolean>(false);
   const [filterText, setFilterText] = useState<string>("");
   const [passwordEntries, setPasswordEntries] = useState<PasswordEntryPreview[]>([]);
+  const [authModalOpen, setAuthModalOpen] = useState<"signin" | "register" | null>("signin");
 
   useEffect(() => {
+    setAccessTokenProvider(accessToken, refreshAccessToken);
+  }, [accessToken, refreshAccessToken]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
     getPasswordEntries()
       .then((passwordEntries) => {
         if (passwordEntries) setPasswordEntries(passwordEntries);
       })
       .catch(() => console.error("Could not load password entries"));
-  }, []);
+  }, [isAuthenticated]);
 
   const handlePasswordEntryClick = async (id: number) => {
     if (!id) return;
@@ -51,6 +61,24 @@ function App() {
     const { encryptedPassword, ...entry } = selectedPasswordEntry;
     return { ...entry, password: encryptedPassword };
   };
+
+  if (!isAuthenticated) {
+    return (
+      <>
+        <SignInModal
+          open={authModalOpen === "signin"}
+          onClose={() => setAuthModalOpen(null)}
+          onSwitchToRegister={() => setAuthModalOpen("register")}
+        />
+        <RegisterModal
+          open={authModalOpen === "register"}
+          onClose={() => setAuthModalOpen(null)}
+          onSwitchToSignIn={() => setAuthModalOpen("signin")}
+        />
+      </>
+    );
+  }
+
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <SidePanel

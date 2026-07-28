@@ -39,7 +39,30 @@
     "logIn": "Log In",
     "quickAccess": "⚡ Quick Portfolio Access:",
     "guestDemo": "🚀 Explore with Guest Demo Account (Instant)",
-    "guestNote": "💡 Note: Guest demo runs in an isolated tenant with pre-loaded sample data. No registration required."
+    "guestNote": "💡 Note: Guest demo runs in an isolated tenant with pre-loaded sample data. No registration required.",
+    "noAccount": "Don't have an account?",
+    "register": "Register",
+    "invalidCredentials": "Invalid email or password"
+  },
+  "registerModal": {
+    "title": "Create Account",
+    "register": "Register",
+    "emailLabel": "Email Address",
+    "usernameLabel": "Username",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm Password",
+    "createAccount": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign In",
+    "passwordMismatch": "Passwords do not match",
+    "usernameMinLength": "Username must be at least 3 characters",
+    "passwordMinLength": "Password must be at least 6 characters"
+  },
+  "auth": {
+    "loggingIn": "Signing in...",
+    "registering": "Creating account...",
+    "loggedOut": "You have been logged out",
+    "sessionExpired": "Session expired. Please sign in again."
   },
   "mui": {
     "checkBox": {

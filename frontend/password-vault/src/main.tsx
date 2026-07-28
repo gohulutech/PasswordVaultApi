@@ -6,12 +6,15 @@ import "./index.css";
 import "./i18n";
 import App from "./App.tsx";
 import theme from "./theme";
+import { AuthProvider } from "./contexts/AuthContext";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </ThemeProvider>
   </StrictMode>,
 );

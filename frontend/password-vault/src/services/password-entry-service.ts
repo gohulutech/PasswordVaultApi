@@ -3,10 +3,54 @@ import type { PasswordEntryDetail } from "../models/PasswordEntryDetail";
 import type { PasswordEntryPreview } from "../models/PasswordEntryPreview";
 import type { PasswordEntryUpdate } from "../models/PasswordEntryUpdate";
 
+let currentAccessToken: string | null = null;
+let refreshAccessTokenFn: (() => Promise<boolean>) | null = null;
+
+export const setAccessTokenProvider = (
+  token: string | null,
+  refreshFn: () => Promise<boolean>,
+) => {
+  currentAccessToken = token;
+  refreshAccessTokenFn = refreshFn;
+};
+
+const authHeaders = (): Record<string, string> => {
+  const headers: Record<string, string> = {};
+  if (currentAccessToken) {
+    headers.Authorization = `Bearer ${currentAccessToken}`;
+  }
+  return headers;
+};
+
+const authJsonHeaders = (): Record<string, string> => ({
+  "Content-Type": "application/json",
+  ...authHeaders(),
+});
+
+const fetchWithAuth = async (
+  url: string,
+  init?: RequestInit,
+): Promise<Response> => {
+  const response = await fetch(url, init);
+  if (response.status === 401 && refreshAccessTokenFn) {
+    const refreshed = await refreshAccessTokenFn();
+    if (refreshed) {
+      return fetch(url, {
+        ...init,
+        headers: {
+          ...(init?.headers as Record<string, string>),
+          ...authHeaders(),
+        },
+      });
+    }
+  }
+  return response;
+};
+
 export const getPasswordEntries = async () => {
   const url = `${import.meta.env.VITE_PASSWORD_VAULT_API_BASE_URL}/api/password`;
   try {
-    const response = await fetch(url);
+    const response = await fetchWithAuth(url, { headers: authHeaders() });
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
@@ -25,7 +69,7 @@ export const getPasswordEntries = async () => {
 export const getPasswordEntry = async (id: number) => {
   const url = `${import.meta.env.VITE_PASSWORD_VAULT_API_BASE_URL}/api/password/${id}`;
   try {
-    const response = await fetch(url);
+    const response = await fetchWithAuth(url, { headers: authHeaders() });
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
@@ -46,11 +90,9 @@ export const createPasswordEntry = async (
 ) => {
   const url = `${import.meta.env.VITE_PASSWORD_VAULT_API_BASE_URL}/api/password`;
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithAuth(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: authJsonHeaders(),
       body: JSON.stringify(passwordEntry),
     });
     if (!response.ok) {
@@ -73,11 +115,9 @@ export const updatePasswordEntry = async (
 ) => {
   const url = `${import.meta.env.VITE_PASSWORD_VAULT_API_BASE_URL}/api/password/${passwordEntry.id}`;
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithAuth(url, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: authJsonHeaders(),
       body: JSON.stringify(passwordEntry),
     });
     if (!response.ok) {

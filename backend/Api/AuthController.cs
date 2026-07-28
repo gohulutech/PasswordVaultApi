@@ -9,6 +9,7 @@ namespace Api;
 [ApiController]
 public class AuthController(IAuthService authService) : ControllerBase
 {
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
     {
@@ -17,6 +18,7 @@ public class AuthController(IAuthService authService) : ControllerBase
         return Created("", result);
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
     {
@@ -25,6 +27,7 @@ public class AuthController(IAuthService authService) : ControllerBase
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpPost("refresh")]
     public async Task<IActionResult> Refresh([FromBody] RefreshRequest refreshRequest)
     {
