@@ -1,5 +1,6 @@
 using Application;
 using Application.ViewModels.Write;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -8,6 +9,7 @@ namespace Api
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PasswordController(IPasswordEntryService passwordEntryService) : ControllerBase
     {
         private int GetUserId()
