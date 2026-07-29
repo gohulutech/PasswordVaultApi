@@ -110,7 +110,7 @@ function App() {
         setFilterText={setFilterText}
         filterText={filterText}
       />
-      {!selectedPasswordEntry && !isCreate ? (
+      {!selectedPasswordEntry && !isCreate && passwordEntries.length === 0 ? (
         <Dashboard onCreatePasswordEntry={handleOnCreate} onLoadSampleData={handleLoadSampleData} />
       ) : (
         <Box sx={{ flexGrow: 1 }}>
