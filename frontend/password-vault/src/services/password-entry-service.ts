@@ -6,10 +6,7 @@ import type { PasswordEntryUpdate } from "../models/PasswordEntryUpdate";
 let currentAccessToken: string | null = null;
 let refreshAccessTokenFn: (() => Promise<boolean>) | null = null;
 
-export const setAccessTokenProvider = (
-  token: string | null,
-  refreshFn: () => Promise<boolean>,
-) => {
+export const setAccessTokenProvider = (token: string | null, refreshFn: () => Promise<boolean>) => {
   currentAccessToken = token;
   refreshAccessTokenFn = refreshFn;
 };
@@ -27,10 +24,7 @@ const authJsonHeaders = (): Record<string, string> => ({
   ...authHeaders(),
 });
 
-const fetchWithAuth = async (
-  url: string,
-  init?: RequestInit,
-): Promise<Response> => {
+const fetchWithAuth = async (url: string, init?: RequestInit): Promise<Response> => {
   const response = await fetch(url, init);
   if (response.status === 401 && refreshAccessTokenFn) {
     const refreshed = await refreshAccessTokenFn();
@@ -85,9 +79,7 @@ export const getPasswordEntry = async (id: number) => {
   }
 };
 
-export const createPasswordEntry = async (
-  passwordEntry: PasswordEntryCreate,
-) => {
+export const createPasswordEntry = async (passwordEntry: PasswordEntryCreate) => {
   const url = `${import.meta.env.VITE_PASSWORD_VAULT_API_BASE_URL}/api/password`;
   try {
     const response = await fetchWithAuth(url, {
@@ -110,9 +102,23 @@ export const createPasswordEntry = async (
   }
 };
 
-export const updatePasswordEntry = async (
-  passwordEntry: PasswordEntryUpdate,
-) => {
+const SAMPLE_ENTRIES: PasswordEntryCreate[] = [
+  { name: "Google", username: "john.doe@gmail.com", password: "SampleGoogle1!" },
+  { name: "GitHub", username: "johndoe-dev", password: "SampleGitHub2@" },
+  { name: "Netflix", username: "john.doe@outlook.com", password: "SampleNetflix3#" },
+  { name: "Amazon", username: "john.doe@amazon.com", password: "SampleAmazon4$" },
+];
+
+export const createSampleData = async (): Promise<PasswordEntryDetail[]> => {
+  const results: PasswordEntryDetail[] = [];
+  for (const entry of SAMPLE_ENTRIES) {
+    const result = await createPasswordEntry(entry);
+    if (result) results.push(result);
+  }
+  return results;
+};
+
+export const updatePasswordEntry = async (passwordEntry: PasswordEntryUpdate) => {
   const url = `${import.meta.env.VITE_PASSWORD_VAULT_API_BASE_URL}/api/password/${passwordEntry.id}`;
   try {
     const response = await fetchWithAuth(url, {

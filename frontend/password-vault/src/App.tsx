@@ -2,13 +2,19 @@ import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import SidePanel from "./components/SidePanel";
 import type { PasswordEntryDetail } from "./models/PasswordEntryDetail";
-import { getPasswordEntries, getPasswordEntry, setAccessTokenProvider } from "./services/password-entry-service";
-import { Box } from "@mui/material";
+import {
+  createSampleData,
+  getPasswordEntries,
+  getPasswordEntry,
+  setAccessTokenProvider,
+} from "./services/password-entry-service";
+import { Stack, Box } from "@mui/material";
 import { PasswordEntryForm } from "./components/PasswordEntryForm/PasswordEntryForm";
 import type { PasswordEntryPreview } from "./models/PasswordEntryPreview";
 import SignInModal from "./components/SignInModal";
 import RegisterModal from "./components/RegisterModal";
 import { useAuth } from "./contexts/AuthContext";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   const { isAuthenticated, accessToken, refreshAccessToken, logout } = useAuth();
@@ -51,6 +57,14 @@ function App() {
     setIsCreate(true);
   };
 
+  const handleLoadSampleData = async () => {
+    const result = await createSampleData();
+    if (result.length === 0) return;
+    const passwordEntries = await getPasswordEntries();
+    if (passwordEntries) setPasswordEntries(passwordEntries);
+    setSelectedPasswordEntry(result[0]);
+  };
+
   const filteredPasswordEntries = useMemo(
     () => passwordEntries.filter((entry) => entry.name.includes(filterText) || entry.username.includes(filterText)),
     [passwordEntries, filterText],
@@ -86,7 +100,7 @@ function App() {
   }
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+    <Stack sx={{ flexDirection: "row", minHeight: "100vh", gap: 1 }}>
       <SidePanel
         onPasswordEntryClick={handlePasswordEntryClick}
         onCreatePasswordEntry={() => handleOnCreate()}
@@ -96,16 +110,20 @@ function App() {
         setFilterText={setFilterText}
         filterText={filterText}
       />
-      <Box sx={{ flexGrow: 1 }}>
-        {(isCreate || selectedPasswordEntry) && (
-          <PasswordEntryForm
-            key={selectedPasswordEntry?.id}
-            onPasswordEntrySaved={handlePasswordEntrySaved}
-            defaultValues={getDefaultValues() ?? undefined}
-          />
-        )}
-      </Box>
-    </Box>
+      {!selectedPasswordEntry && !isCreate ? (
+        <Dashboard onCreatePasswordEntry={handleOnCreate} onLoadSampleData={handleLoadSampleData} />
+      ) : (
+        <Box sx={{ flexGrow: 1 }}>
+          {(isCreate || selectedPasswordEntry) && (
+            <PasswordEntryForm
+              key={selectedPasswordEntry?.id}
+              onPasswordEntrySaved={handlePasswordEntrySaved}
+              defaultValues={getDefaultValues() ?? undefined}
+            />
+          )}
+        </Box>
+      )}
+    </Stack>
   );
 }
 

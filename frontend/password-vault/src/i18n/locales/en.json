@@ -57,6 +57,12 @@
     "passwordMismatch": "Passwords do not match",
     "passwordMinLength": "Password must be at least 6 characters"
   },
+  "dashboard": {
+    "emptyTitle": "Your Vault is empty",
+    "emptySubtitle": "add your first password entry to get started",
+    "createFirstEntry": "+ Create First Entry",
+    "loadSampleData": "or Load Sample Data"
+  },
   "auth": {
     "loggingIn": "Signing in...",
     "registering": "Creating account...",
