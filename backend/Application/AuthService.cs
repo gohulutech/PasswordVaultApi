@@ -20,11 +20,8 @@ public class AuthService(
         var existingUser = await userRepository.FindByEmail(registerRequest.Email);
         if (existingUser != null) return null;
 
-        var existingUsername = await userRepository.FindByUsername(registerRequest.Username);
-        if (existingUsername != null) return null;
-
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password);
-        var user = User.CreateUser(0, registerRequest.Email, registerRequest.Username, passwordHash, DateTime.UtcNow);
+        var user = User.CreateUser(0, registerRequest.Email, registerRequest.Email, passwordHash, DateTime.UtcNow);
         var savedUser = await userRepository.Save(user);
 
         return await GenerateAuthResponse(savedUser);

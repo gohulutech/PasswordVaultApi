@@ -11,10 +11,11 @@ using Microsoft.IdentityModel.Tokens;
 using SQLite;
 
 var builder = WebApplication.CreateBuilder(args);
+var corsPolicy = "AllowAll";
 
 builder.Services.AddCors((options) =>
 {
-    options.AddPolicy("AllowAll",
+    options.AddPolicy(corsPolicy,
         policy =>
         {
             policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
@@ -108,7 +109,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 var app = builder.Build();
 
-app.UseCors("AllowFrontend");
+app.UseCors(corsPolicy);
 app.UseRateLimiter();
 
 // Configure the HTTP request pipeline.

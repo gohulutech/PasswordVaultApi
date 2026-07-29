@@ -1,4 +1,4 @@
-import { AccountCircle, Lock, Person, Visibility, VisibilityOff } from "@mui/icons-material";
+import { AccountCircle, Lock, Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Alert,
   Button,
@@ -27,7 +27,6 @@ export default function RegisterModal({ open, onClose, onSwitchToSignIn }: IRegi
   const { register } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,18 +41,13 @@ export default function RegisterModal({ open, onClose, onSwitchToSignIn }: IRegi
       return;
     }
 
-    if (username.length < 3) {
-      setError(t("registerModal.usernameMinLength"));
-      return;
-    }
-
     if (password.length < 6) {
       setError(t("registerModal.passwordMinLength"));
       return;
     }
 
     setLoading(true);
-    const success = await register({ email, username, password });
+    const success = await register({ email, password });
     if (success) {
       onClose();
     } else {
@@ -83,23 +77,6 @@ export default function RegisterModal({ open, onClose, onSwitchToSignIn }: IRegi
                 startAdornment: (
                   <InputAdornment position="start">
                     <AccountCircle />
-                  </InputAdornment>
-                ),
-              },
-            }}
-          />
-          <TextField
-            label={t("registerModal.usernameLabel")}
-            fullWidth
-            variant="outlined"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Person />
                   </InputAdornment>
                 ),
               },

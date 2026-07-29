@@ -48,14 +48,12 @@
     "title": "Create Account",
     "register": "Register",
     "emailLabel": "Email Address",
-    "usernameLabel": "Username",
     "passwordLabel": "Password",
     "confirmPasswordLabel": "Confirm Password",
     "createAccount": "Create Account",
     "alreadyHaveAccount": "Already have an account?",
     "signIn": "Sign In",
     "passwordMismatch": "Passwords do not match",
-    "usernameMinLength": "Username must be at least 3 characters",
     "passwordMinLength": "Password must be at least 6 characters"
   },
   "auth": {
