@@ -11,14 +11,16 @@ using Microsoft.IdentityModel.Tokens;
 using SQLite;
 
 var builder = WebApplication.CreateBuilder(args);
-var corsPolicy = "AllowAll";
+var corsPolicy = "AllowedOrigins";
+
+var allowedOrigins = builder.Configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>() ?? ["http://localhost:5173"];
 
 builder.Services.AddCors((options) =>
 {
     options.AddPolicy(corsPolicy,
         policy =>
         {
-            policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            policy.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
         });
 });
 

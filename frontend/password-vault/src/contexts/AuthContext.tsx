@@ -19,7 +19,6 @@ import type {
 
 type AuthState = {
   accessToken: string | null;
-  refreshTokenValue: string | null;
   userId: number | null;
   username: string | null;
   isAuthenticated: boolean;
@@ -37,7 +36,6 @@ const AuthContext = createContext<AuthContextType | null>(null);
 function mapResponseToState(response: AuthResponse): AuthState {
   return {
     accessToken: response.accessToken,
-    refreshTokenValue: response.refreshToken,
     userId: response.userId,
     username: response.username,
     isAuthenticated: true,
@@ -46,7 +44,6 @@ function mapResponseToState(response: AuthResponse): AuthState {
 
 const UNAUTHENTICATED_STATE: AuthState = {
   accessToken: null,
-  refreshTokenValue: null,
   userId: null,
   username: null,
   isAuthenticated: false,
@@ -85,9 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [authState.accessToken]);
 
   const refreshAccessToken = useCallback(async (): Promise<boolean> => {
-    if (!authState.refreshTokenValue) return false;
-
-    const response = await apiRefreshToken(authState.refreshTokenValue);
+    const response = await apiRefreshToken();
     if (!response) {
       setAuthState(UNAUTHENTICATED_STATE);
       return false;
@@ -96,10 +91,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAuthState((prev) => ({
       ...prev,
       accessToken: response.accessToken,
-      refreshTokenValue: response.refreshToken,
     }));
     return true;
-  }, [authState.refreshTokenValue]);
+  }, []);
 
   return (
     <AuthContext.Provider
