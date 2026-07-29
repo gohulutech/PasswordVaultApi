@@ -25,12 +25,34 @@ interface ISignInModalProps {
 
 export default function SignInModal({ open, onClose, onSwitchToRegister }: ISignInModalProps) {
   const { t } = useTranslation();
-  const { login } = useAuth();
+  const { login, register } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const GUEST_EMAIL = "guest@demo.local";
+  const GUEST_PASSWORD = "GuestDemo123!";
+
+  const handleGuestDemo = async () => {
+    setLoading(true);
+    setError(null);
+
+    let success = await register({ email: GUEST_EMAIL, password: GUEST_PASSWORD });
+
+    if (!success) {
+      success = await login({ email: GUEST_EMAIL, password: GUEST_PASSWORD });
+    }
+
+    if (success) {
+      onClose();
+    } else {
+      setError(t("signInModal.invalidCredentials"));
+    }
+
+    setLoading(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,8 +157,14 @@ export default function SignInModal({ open, onClose, onSwitchToRegister }: ISign
           <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
             {t("signInModal.quickAccess")}
           </Typography>
-          <Button variant="contained" fullWidth sx={{ py: 1, textTransform: "none" }}>
-            {t("signInModal.guestDemo")}
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ py: 1, textTransform: "none" }}
+            onClick={handleGuestDemo}
+            disabled={loading}
+          >
+            {loading ? t("auth.loggingIn") : t("signInModal.guestDemo")}
           </Button>
         </Stack>
 
