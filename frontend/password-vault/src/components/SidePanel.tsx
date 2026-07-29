@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 interface ISidePanelProps {
   onPasswordEntryClick: (id: number) => void;
   onCreatePasswordEntry: () => void;
+  onLogout: () => void;
   passwordEntries: PasswordEntryPreview[];
   selectedEntryId?: number;
   setFilterText: (filterText: string) => void;
@@ -15,6 +16,7 @@ interface ISidePanelProps {
 export default function SidePanel({
   onPasswordEntryClick,
   onCreatePasswordEntry,
+  onLogout,
   passwordEntries,
   selectedEntryId,
   setFilterText,
@@ -43,63 +45,75 @@ export default function SidePanel({
         },
       }}
     >
-      <Button
-        variant="contained"
-        onClick={onCreatePasswordEntry}
-        sx={{
-          backgroundColor: "secondary.main",
-          textTransform: "none",
-          marginTop: "14px",
-        }}
-      >
-        {t("sidePanel.createEntry")}
-      </Button>
-      <TextField
-        variant="outlined"
-        label="Search"
-        sx={{ marginTop: 2, marginBottom: 1 }}
-        onChange={handleSearchPasswordChange}
-        value={filterText}
-      />
-      <Typography variant="subtitle2" sx={{ marginTop: 2, marginBottom: 1 }}>
-        {t("sidePanel.savedPasswords")}
-      </Typography>
-      <List sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        {passwordEntries.map((passwordEntry) => (
-          <Card
-            key={passwordEntry.id}
-            sx={{
-              cursor: "pointer",
-              backgroundColor: selectedEntryId === passwordEntry.id ? "#f1f5f9" : "transparent",
-              "&:hover": { backgroundColor: "#f1f5f9" },
-            }}
-          >
-            <ListItem onClick={() => handleSelectPasswordEntry(passwordEntry)}>
-              <Stack>
-                <Typography
-                  sx={{
-                    fontWeight: 600,
-                    color: "#1e293b",
-                    fontSize: "0.95rem",
-                  }}
-                >
-                  {passwordEntry.name}
-                </Typography>
-                <Typography
-                  sx={{
-                    fontWeight: 400,
-                    color: "#64748b",
-                    fontSize: "0.85rem",
-                    marginTop: "2px",
-                  }}
-                >
-                  {passwordEntry.username}
-                </Typography>
-              </Stack>
-            </ListItem>
-          </Card>
-        ))}
-      </List>
+      <Stack sx={{ height: "100%" }}>
+        <Button
+          variant="contained"
+          onClick={onCreatePasswordEntry}
+          sx={{
+            backgroundColor: "secondary.main",
+            textTransform: "none",
+            marginTop: "14px",
+          }}
+        >
+          {t("sidePanel.createEntry")}
+        </Button>
+        <TextField
+          variant="outlined"
+          label="Search"
+          sx={{ marginTop: 2, marginBottom: 1 }}
+          onChange={handleSearchPasswordChange}
+          value={filterText}
+        />
+        <Typography variant="subtitle2" sx={{ marginTop: 2, marginBottom: 1 }}>
+          {t("sidePanel.savedPasswords")}
+        </Typography>
+        <List sx={{ display: "flex", flexDirection: "column", gap: 3, flex: 1, overflow: "auto" }}>
+          {passwordEntries.map((passwordEntry) => (
+            <Card
+              key={passwordEntry.id}
+              sx={{
+                cursor: "pointer",
+                backgroundColor: selectedEntryId === passwordEntry.id ? "#f1f5f9" : "transparent",
+                "&:hover": { backgroundColor: "#f1f5f9" },
+              }}
+            >
+              <ListItem onClick={() => handleSelectPasswordEntry(passwordEntry)}>
+                <Stack>
+                  <Typography
+                    sx={{
+                      fontWeight: 600,
+                      color: "#1e293b",
+                      fontSize: "0.95rem",
+                    }}
+                  >
+                    {passwordEntry.name}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontWeight: 400,
+                      color: "#64748b",
+                      fontSize: "0.85rem",
+                      marginTop: "2px",
+                    }}
+                  >
+                    {passwordEntry.username}
+                  </Typography>
+                </Stack>
+              </ListItem>
+            </Card>
+          ))}
+        </List>
+        <Button
+          variant="outlined"
+          onClick={onLogout}
+          sx={{
+            textTransform: "none",
+            marginTop: 2,
+          }}
+        >
+          {t("sidePanel.logout")}
+        </Button>
+      </Stack>
     </Drawer>
   );
 }

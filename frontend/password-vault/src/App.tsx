@@ -11,7 +11,7 @@ import RegisterModal from "./components/RegisterModal";
 import { useAuth } from "./contexts/AuthContext";
 
 function App() {
-  const { isAuthenticated, accessToken, refreshAccessToken } = useAuth();
+  const { isAuthenticated, accessToken, refreshAccessToken, logout } = useAuth();
   const [selectedPasswordEntry, setSelectedPasswordEntry] = useState<PasswordEntryDetail | undefined>(undefined);
   const [isCreate, setIsCreate] = useState<boolean>(false);
   const [filterText, setFilterText] = useState<string>("");
@@ -62,6 +62,11 @@ function App() {
     return { ...entry, password: encryptedPassword };
   };
 
+  const handleLogOut = () => {
+    setAuthModalOpen("signin");
+    logout();
+  };
+
   if (!isAuthenticated) {
     return (
       <>
@@ -84,6 +89,7 @@ function App() {
       <SidePanel
         onPasswordEntryClick={handlePasswordEntryClick}
         onCreatePasswordEntry={() => handleOnCreate()}
+        onLogout={handleLogOut}
         passwordEntries={filteredPasswordEntries}
         selectedEntryId={selectedPasswordEntry?.id}
         setFilterText={setFilterText}

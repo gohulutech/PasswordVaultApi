@@ -20,7 +20,8 @@
   },
   "sidePanel": {
     "createEntry": "+ Create Password Entry",
-    "savedPasswords": "Saved Passwords"
+    "savedPasswords": "Saved Passwords",
+    "logout": "Log Out"
   },
   "passwordToggle": {
     "hide": "Hide the password",
