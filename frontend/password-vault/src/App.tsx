@@ -64,6 +64,7 @@ function App() {
 
   const handleLogOut = () => {
     setAuthModalOpen("signin");
+    setSelectedPasswordEntry(undefined);
     logout();
   };
 
